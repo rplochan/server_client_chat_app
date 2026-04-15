@@ -48,6 +48,8 @@ int main() {
         cout << "Server: " << buffer << endl;
     }
 
+
+    
     // 6. Close socket
     close(sock);
 
