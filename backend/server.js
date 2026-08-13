@@ -3,7 +3,7 @@ import cors from "cors"    // imports CORS middleware so browsers can access ur 
 import dotenv from "dotenv"
 
 
-  dotenv.config(); // loads the env variables from .env
+dotenv.config(); // loads the env variables from .env
 
 const app = express();     // creates the express application.
 const PORT = process.env.PORT || 3000;
