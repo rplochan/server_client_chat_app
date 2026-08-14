@@ -1,9 +1,12 @@
 import pool from "../config/db.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 export const registerUser = async (req, res) => {
     try {
+        // take the json format data form the user.. POST req.
         const { username, email, password } = req.body;
+
 
         if (!username || !email || !password) {
             return res.status(400).json({
@@ -11,6 +14,7 @@ export const registerUser = async (req, res) => {
             });
         }
 
+        // check if the email is already present
         const result = await pool.query(
             "SELECT * FROM users WHERE email = $1",
             [email]
@@ -22,8 +26,10 @@ export const registerUser = async (req, res) => {
             });
         }
 
+        // hash the password.
         const passwordHash = await bcrypt.hash(password, 10);
 
+        // insert in database.
         await pool.query(
             `INSERT INTO users (username, email, password_hash)
              VALUES ($1, $2, $3)`,
@@ -73,8 +79,22 @@ export const loginUser = async (req, res) => {
             });
         }
 
+        // create a jwt token.
+        const token = jwt.sign(
+            {
+                userId : user.id,
+                email : user.email
+            },
+            process.env.JWT_SECRET,
+            {
+                expiresIn : "1h"
+            }
+        )
+
+
         res.json({
             message: "Login successful",
+            token: token,
             user: {
                 id : user.id,
                 username : user.username,
