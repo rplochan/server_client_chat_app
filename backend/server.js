@@ -20,18 +20,11 @@ app.listen(PORT, () =>{
     console.log(`Server running on port ${PORT}.`);
 });
 
-/*
-import pool from "./config/db.js";
 
-pool.query("SELECT NOW()")
-    .then((result) => {
-        console.log(result.rows[0]);
-    })
-    .catch((err) => {
-        console.error(err);
-    });
-*/
 import authRoutes from "./routes/authRoutes.js";
+import messageRoutes from "./routes/messageRoutes.js";
+
+app.use("/api/messages", messageRoutes);
 
 app.use("/api/auth", authRoutes);
 

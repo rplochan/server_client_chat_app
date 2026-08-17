@@ -110,3 +110,10 @@ export const loginUser = async (req, res) => {
         });
     }
 };
+
+export const getProfile = (req, res) => {
+    res.json({
+        message: "Profile accessed",
+        user: req.user
+    });
+};
