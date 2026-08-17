@@ -24,3 +24,32 @@ export const sendMessage =  async (req, res) => {
         });
     }
 }
+
+export const getChatHistory = async (req, res) => {
+    try {
+        const currentUserId = req.user.userId;
+        const otherUserId = req.params.userId;
+
+        const result = await pool.query(
+            `SELECT id, sender_id, receiver_id, content, created_at
+             FROM messages
+             WHERE
+                 (sender_id = $1 AND receiver_id = $2)
+                 OR
+                 (sender_id = $2 AND receiver_id = $1)
+             ORDER BY created_at ASC`,
+            [currentUserId, otherUserId]
+        );
+
+        res.json({
+            messages: result.rows
+        });
+
+    } catch (error) {
+        console.error(error);
+
+        res.status(500).json({
+            message: "Server error"
+        });
+    }
+};
